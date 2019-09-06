@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.zjy.js.customdialog.activity.FontSizeTestActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/activity_fontsize_input"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="待生成的文字"/>
+
+            <Button
+                android:id="@+id/activity_fontsize_btn_create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="生成"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="字号范围："/>
+
+            <EditText
+                android:id="@+id/activity_fontsize_min"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="最小"
+                android:text="12"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"/>
+
+            <EditText
+                android:id="@+id/activity_fontsize_max"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="最大"
+                android:text="22"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/activity_fontsize_displayll"
+            android:layout_margin="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

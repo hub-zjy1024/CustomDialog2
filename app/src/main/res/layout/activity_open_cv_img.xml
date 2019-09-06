@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    tools:context="com.zjy.js.customdialog.activity.OpenCvImgActivity">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/opencv_btn_getimg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="选取图片"/>
+        <Button
+            android:id="@+id/opencv_btn_modify"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="矫正"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/opencv_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

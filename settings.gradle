@@ -1,0 +1,1 @@
+include ':app', ':library', ':mqttlib',':androidzxing', ':opencv',':openCVLibrary342',':openCVimagemanipulations'

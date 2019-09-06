@@ -1,0 +1,10 @@
+//apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+}
+
+dependencies {
+    api project(':openCVLibrary342')
+}
