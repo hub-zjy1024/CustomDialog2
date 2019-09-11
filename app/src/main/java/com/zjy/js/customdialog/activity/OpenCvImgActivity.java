@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.zjy.js.customdialog.R;
 import com.zjy.js.customdialog.image.OpenCvImageUtils;
 
 import org.opencv.android.BaseLoaderCallback;
@@ -24,7 +25,11 @@ import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class OpenCvImgActivity extends AppCompatActivity {
 
@@ -71,26 +76,28 @@ public class OpenCvImgActivity extends AppCompatActivity {
                         //                        int[] newPixels = ImageUtils.getModifyOrientation(pixels, width, height);
                         //                        final Bitmap newImg = Bitmap.createBitmap(newPixels, width, height, bitmap
                         //                        .getConfig());
-                        OpenCvImageUtils utils = new OpenCvImageUtils();
-                        try {
-                            final Bitmap newImg = utils.testWarpPerspective(bitmap);
-
-                            mHandler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    imageView.setImageBitmap(newImg);
-                                }
-                            });
-                        } catch (Throwable e) {
-                            e.printStackTrace();
-                            runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    showAlert("矫正异常");
-                                }
-                            });
-                        }
-
+                        dealBitmap(bitmap);
+                    }
+                }.start();
+            }
+        });
+        Button btnModifyNet=findViewById(R.id.opencv_btn_modify_net);
+        btnModifyNet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread() {
+                    @Override
+                    public void run() {
+//                        Bitmap bitmap = drawableToBitmap(imageView.getDrawable());
+                        //                        int width = bitmap.getWidth();
+                        //                        int height = bitmap.getHeight();
+                        //                        int[] pixels = new int[width * height];
+                        //                        bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+                        //                        int[] newPixels = ImageUtils.getModifyOrientation(pixels, width, height);
+                        //                        final Bitmap newImg = Bitmap.createBitmap(newPixels, width, height, bitmap
+                        //                        .getConfig());
+                        Bitmap  bitmap=getTargetBitmap();
+                        dealBitmap(bitmap);
                     }
                 }.start();
             }
@@ -118,6 +125,39 @@ public class OpenCvImgActivity extends AppCompatActivity {
         };
     }
 
+    public void dealBitmap(Bitmap bitmap){
+        OpenCvImageUtils utils = new OpenCvImageUtils();
+        try {
+            final Bitmap newImg = utils.testWarpPerspective(bitmap);
+
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    imageView.setImageBitmap(newImg);
+                }
+            });
+        } catch (Throwable e) {
+            e.printStackTrace();
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    showAlert("矫正异常");
+                }
+            });
+        }
+    }
+    public Bitmap getTargetBitmap(){
+        String url="https://img-blog.csdnimg.cn/20190320174147980.jpg?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1lVX1hpYW5ndW8=,size_16,color_FFFFFF,t_70";
+        try {
+            HttpURLConnection conn= (HttpURLConnection) new URL(url).openConnection();
+            InputStream outputStream = conn.getInputStream();
+            Bitmap btm=BitmapFactory.decodeStream(outputStream);
+            return btm;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
     public void showAlert(String msg) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }

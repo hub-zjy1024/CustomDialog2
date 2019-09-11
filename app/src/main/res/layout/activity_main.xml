@@ -19,16 +19,16 @@
         android:visibility="gone"
         />
 
-    <com.zjy.js.customdialog.MyScrolling
+    <com.zjy.js.customdialog.view.MyScrolling
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#cadc6c">
 
-        <com.zjy.js.customdialog.MyScrollChild
+        <com.zjy.js.customdialog.view.MyScrollChild
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:background="#65b473"/>
-    </com.zjy.js.customdialog.MyScrolling>
+    </com.zjy.js.customdialog.view.MyScrolling>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/main_swipe_refresh"

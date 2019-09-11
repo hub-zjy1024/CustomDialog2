@@ -19,10 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".SettingsActivity"/>
-        <activity android:name=".AddPrintersActivity"/>
-        <activity android:name=".AdvancedPrintOptionsActivity"/>
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".activity.SettingsActivity"/>
+        <activity android:name=".activity.AddPrintersActivity"/>
+        <activity android:name=".activity.AdvancedPrintOptionsActivity"/>
+        <activity android:name=".activity.MainActivity"/>
         <activity android:name="printer.activity.PickPicPrintingActivity"/>
         <activity android:name="printer.activity.SFActivity"/>
         <activity android:name="printer.activity.SetYundanActivity"/>
@@ -31,7 +31,7 @@
         </activity>
 
         <service
-            android:name=".ServiceMQTT"
+            android:name=".mqtt.ServiceMQTT"
             android:enabled="true">
         </service>
 
@@ -39,7 +39,7 @@
         </activity>
         <activity android:name=".activity.OpenCvImgActivity">
         </activity>
-        <activity android:name=".QQBrowserTabActivity">
+        <activity android:name=".activity.QQBrowserTabActivity">
         </activity>
     </application>
 

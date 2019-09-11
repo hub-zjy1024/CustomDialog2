@@ -24,9 +24,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.zjy.js.customdialog.AddPrintersActivity;
 import com.zjy.js.customdialog.JniTest;
-import com.zjy.js.customdialog.QQBrowserTabActivity;
 import com.zjy.js.customdialog.R;
 
 import org.opencv.samples.imagemanipulations.ImageManipulationsActivity;

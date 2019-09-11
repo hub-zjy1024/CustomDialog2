@@ -42,6 +42,7 @@ public class OpenCvImageUtils {
         Bitmap newBm = Bitmap.createBitmap(mat.width(), mat.height(), Bitmap.Config.ARGB_8888);
         mat.release();
         Utils.matToBitmap(target, newBm, true);
+        target.release();
         return newBm;
     }
 

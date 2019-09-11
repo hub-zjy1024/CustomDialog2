@@ -477,6 +477,7 @@ class HandleImgUtils {
      */
     public static Mat canny(Mat src) {
         Mat mat = src.clone();
+        HandleImgUtils.saveImg(src, opencv_work_dir + "gray.jpg");
         Imgproc.Canny(src, mat, 60, 200);
         HandleImgUtils.saveImg(mat, opencv_work_dir + "canny.jpg");
         return mat;
@@ -748,14 +749,15 @@ class HandleImgUtils {
     }
 
     /**
-     寻找四个顶点的坐标 思路： 1、canny描边 2、寻找最大轮廓 3、对最大轮廓点集合逼近，得到轮廓的大致点集合
-     4、把点击划分到四个区域中，即左上，右上，左下，右下 5、根据矩形中，对角线最长，找到矩形的四个顶点坐标
+     寻找四个顶点的坐标 思路： 1、canny描边<br/>
+     2、寻找最大轮廓<br/>
+     3、对最大轮廓点集合逼近，得到轮廓的大致点集合<br/>
+     4、把点击划分到四个区域中，即左上，右上，左下，右下 <br/>
+     5、根据矩形中，对角线最长，找到矩形的四个顶点坐标<br/>
      @param src
      */
     public static Point[] findFourPoint2(Mat src,Mat cannyMat) {
-        // 1、canny描边
-        // 2、寻找最大轮廓;3、对最大轮廓点集合逼近，得到轮廓的大致点集合
-        Point[] points = useApproxPolyDPFindPoints(cannyMat);
+        Point[] points = useApproxPolyDPFindPoints(src);
 
         //在图像上画出逼近的点
         Mat approxPolyMat = src.clone();

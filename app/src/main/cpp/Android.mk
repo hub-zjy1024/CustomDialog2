@@ -29,7 +29,7 @@ OPENCV_INSTALL_MODULES:=on
 #LOCAL_C_INCLUDES +=opencv opencv2
 $(warning home=$(opencv_home))
 LOCAL_MODULE := opencv_zjy
-LOCAL_SRC_FILES := opencvImgUtils.cpp
+LOCAL_SRC_FILES := opencvImgUtils.cpp fuliyeTest.cpp
 LOCAL_SHARED_LIBRARIES :=opencv_3_4_2
 LOCAL_LDLIBS += -lm -llog
 

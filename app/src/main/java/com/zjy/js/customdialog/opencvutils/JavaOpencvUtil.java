@@ -2,9 +2,13 @@ package com.zjy.js.customdialog.opencvutils;
 
 import android.graphics.Bitmap;
 
+import org.opencv.core.Mat;
+
 /**
  Created by 张建宇 on 2019/9/6. */
 public class JavaOpencvUtil {
+
+
     public void canry(Bitmap bitmap) {
 //        Mat mat = new Mat();
 //        Utils.bitmapToMat(bitmap, mat);

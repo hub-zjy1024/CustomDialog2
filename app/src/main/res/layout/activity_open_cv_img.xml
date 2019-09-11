@@ -23,7 +23,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="矫正"/>
-
+        <Button
+            android:id="@+id/opencv_btn_modify_net"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="矫正net"/>
     </LinearLayout>
 
     <ImageView

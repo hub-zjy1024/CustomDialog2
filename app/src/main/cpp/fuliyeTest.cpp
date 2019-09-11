@@ -3,33 +3,110 @@
 //
 
 
-#include <opencv2/core/core.hpp>
-#include <opencv2/imgproc/imgproc.hpp>
-#include <opencv2/highgui/highgui.hpp>
-#include <iostream>
-#include "opencv2/core/cvstd.hpp"
-#include "opencv2/core/types.hpp"
-#include "opencv2/opencv.hpp"
-#include "opencv2/imgcodecs/imgcodecs_c.h"
-#include "opencv2/core/mat.hpp"
-#include "opencv2/imgproc.hpp"
-#include "opencv2/core/fast_math.hpp"
-#include "../../../../../../android-ndk-r13b-windows-x86_64/android-ndk-r13b/sources/cxx-stl/llvm-libc++/include/cmath"
-#include "../../../../../../android-ndk-r13b-windows-x86_64/android-ndk-r13b/toolchains/llvm/prebuilt/windows-x86_64/lib64/clang/3.8.256229/include/tgmath.h"
-#include "opencv2/core/base.hpp"
-#include "opencv2/core/hal/interface.h"
-#include "opencv2/core.hpp"
+#include "fuliyeTest.h"
 
 using namespace cv;
 using namespace std;
 
 #define GRAY_THRESH 150
 #define HOUGH_VOTE 100
+#define IMAGE_PATH "/sdcard/opencv"
+#define COLSLIMIT 1080
 
 //#define DEGREE 27
 
+
+TestHourf::TestHourf(int a, int b) {
+    this->a=a;
+    this->b=b;
+}
+void TestHourf::jiaozheng(){
+
+};
+class Child:TestHourf{
+    /*int a;
+    int b;*/
+public :
+    Child(int i, int i1) : TestHourf(i, i1) {
+        TestHourf(i,i1);
+}
+
+void jiaozheng(){
+        Mat imgOrigion = imread(IMAGE_PATH);
+        Mat imgScale;
+        float scaleFactor = COLSLIMIT / imgOrigion.cols;
+        resize(imgOrigion, imgScale, Size(imgOrigion.cols * scaleFactor, imgOrigion.rows * scaleFactor));  // reduce image size to speed up calculation
+        Mat imgGray;
+        cvtColor(imgScale, imgGray, COLOR_BGR2GRAY);  // gray scale
+        Mat imgCanny;
+        Canny(imgGray, imgCanny, 100, 200);  // use canny operator to detect contour
+        imshow("Contour detection", imgCanny);
+        std::vector<Vec4i> lineAll;
+        HoughLinesP(imgCanny, lineAll, 1, CV_PI / 180, 30, 50, 4);
+        // draw all lines detected
+        Mat imgAllLines;
+        imgScale.copyTo(imgAllLines);
+        for (int i = 0, steps = lineAll.size(); i < steps; i++)
+        {
+            line(imgAllLines, Point(lineAll[i][0], lineAll[i][1]), Point(lineAll[i][2], lineAll[i][3]), Scalar(255, 255, 255), 3, 8);
+        }
+    }
+        IplImage *Rotate(IplImage *RowImage)
+        {
+            //建立储存边缘检测结果图像canImage
+            IplImage *canImage=cvCreateImage(cvGetSize(RowImage),IPL_DEPTH_8U,1);
+            //进行边缘检测
+            cvCanny(RowImage,canImage,30,200,3);
+            //进行hough变换
+            CvMemStorage *storage=cvCreateMemStorage();
+            CvSeq *lines=NULL;
+            lines=cvHoughLines2(canImage,storage,CV_HOUGH_STANDARD,1,CV_PI/180,20,0,0);
+            //统计与竖直夹角<30度的直线个数以及其夹角和
+            int numLine=0;
+            float sumAng=0.0;
+            for(int i=0;i<lines->total;i++)
+            {
+                float *line=(float *)cvGetSeqElem(lines,i);
+                float theta=line[1];  //获取角度 为弧度制
+                if(theta<30*CV_PI/180 || (CV_PI-theta)<30*CV_PI/180 )
+                {
+                    numLine++;
+                    sumAng=sumAng+theta;
+                }
+            }
+            //计算出平均倾斜角，anAng为角度制
+            float avAng=(sumAng/numLine)*180/CV_PI;
+
+            //获取二维旋转的仿射变换矩阵
+            CvPoint2D32f center;
+            center.x=float (RowImage->width/2.0);
+            center.y=float (RowImage->height/2.0);
+            float m[6];
+            CvMat M = cvMat( 2, 3, CV_32F, m );
+            cv2DRotationMatrix( center,avAng,1, &M);
+            //建立输出图像RotateRow
+            double a=sin(sumAng/numLine);
+            double b=cos(sumAng/numLine);
+            int width_rotate=int (RowImage->height*fabs(a)+RowImage->width*fabs(b));
+            int height_rotate=int (RowImage->width*fabs(a)+RowImage->height*fabs(b));
+            IplImage *RotateRow=cvCreateImage(cvSize(width_rotate,height_rotate),IPL_DEPTH_8U,1);
+            //变换图像，并用黑色填充其余值
+            m[2]+=(width_rotate-RowImage->width)/2;
+            m[5]+=(height_rotate-RowImage->height)/2;
+            cvWarpAffine(RowImage,RotateRow, &M,CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS,cvScalarAll(0));
+            //释放
+            cvReleaseImage(&canImage);
+            cvReleaseMemStorage(&storage);
+            return RotateRow;
+        }
+};
+
 int main(int argc, char **argv)
 {
+    TestHourf ho=TestHourf(1,2);
+    TestHourf ho2(1,2);
+//    int b=ho->a;
+    ho.jiaozheng();
     //Read a single-channel image
     const char* filename = "imageText.jpg";
     Mat srcImg = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
@@ -175,3 +252,5 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+
