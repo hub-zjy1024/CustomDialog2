@@ -206,7 +206,8 @@ void testMalloc() {
     int var[3] = {1, 2, 3};
     int *ptr = var;  //指针中的数组地址
     int size=sizeof(var)/ sizeof(var[0]);
-    LOGE("var p=%d",(int)p);
+//    LOGE("var p=%d",(int)p);
+    LOGE("var p=%p",p);
 
     LOGE("var size=%d",size);
     for (int i = 0; i < 3; i++) {

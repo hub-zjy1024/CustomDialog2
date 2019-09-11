@@ -115,17 +115,17 @@ Java_com_zjy_js_customdialog_opencvutils_ImageUtils_getModifyOrientation(JNIEnv 
 
 //    cvCanny(image3channel,pCannyImage,50,150,3);
 
-    int* outImage=new int[w*h];
-    for(int i=0;i<w*h;i++)
-    {
-        outImage[i]=(int)pCannyImage->imageData[i];
-    }
+//    int* outImage=new int[w*h];
+//    for(int i=0;i<w*h;i++)
+//    {
+//        outImage[i]=(int)pCannyImage->imageData[i];
+//    }
 
     int size = w * h;
     jintArray result = env->NewIntArray(size);
-    env->SetIntArrayRegion(result, 0, size, outImage);
+//    env->SetIntArrayRegion(result, 0, size, outImage);
     env->ReleaseIntArrayElements(buf, cbuf, 0);
-    delete outImage;
+//    delete outImage;
     return result;
 };
 
