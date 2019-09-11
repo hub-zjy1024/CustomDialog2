@@ -25,12 +25,10 @@ include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 OPENCV_INSTALL_MODULES:=on
-#include $(opencv_home)/native/jni/OpenCV.mk
-#LOCAL_C_INCLUDES +=opencv opencv2
-$(warning home=$(opencv_home))
 LOCAL_MODULE := opencv_zjy
-LOCAL_SRC_FILES := opencvImgUtils.cpp fuliyeTest.cpp
+#LOCAL_C_INCLUDES +=$(LOCAL_PATH)
+LOCAL_SRC_FILES := opencvImgUtils.cpp fuliyeTest.cpp changeImg.cpp androidUtil.cpp
 LOCAL_SHARED_LIBRARIES :=opencv_3_4_2
-LOCAL_LDLIBS += -lm -llog
+LOCAL_LDLIBS += -lm -llog -ljnigraphics
 
 include $(BUILD_SHARED_LIBRARY)

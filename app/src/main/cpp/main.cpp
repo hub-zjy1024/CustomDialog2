@@ -2,13 +2,8 @@
 #include <jni.h>
 #include <cstring>
 /* Header for class com_zjy_js_customdialog_JniTest */
-//#include "com_zjy_js_customdialog_JniTest.h"
+#include "com_zjy_js_customdialog_JniTest.h"
 
-#ifndef _Included_com_zjy_js_customdialog_JniTest
-#define _Included_com_zjy_js_customdialog_JniTest
-
-//#include "sstream"
-//using namespace std;
 
 #ifdef __cplusplus
 
@@ -75,5 +70,4 @@ JNIEXPORT jstring JNICALL Java_com_zjy_js_customdialog_JniTest_getString
 
 #ifdef __cplusplus
 }
-#endif
 #endif

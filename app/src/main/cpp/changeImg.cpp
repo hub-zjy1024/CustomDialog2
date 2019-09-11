@@ -19,18 +19,20 @@ Mat imgDataToMat(JNIEnv *env, jintArray buf, jint w, jint h) {
 
     jint *cbuf;
     cbuf = env->GetIntArrayElements(buf, 0);
+    const vector<int, allocator<int>> *vetdata;
+    Mat(w,h, CV_8UC4,buf);
     Mat myimg(h, w, CV_8UC4, (unsigned char *) cbuf);
 
-
     Mat srcImage = imread("F:\\opencv_re_learn\\2.jpg");
-    cvtColor(srcImage,cv2.COLOR_BGR2GRAY)
+//    cvtColor(srcImage, COLOR_BGR2GRAY);
     if (!srcImage.data){
         cout << "falied to read" << endl;
         system("pause");
-        return;
+        jclass ex = env->FindClass("java/lang/Exception");
+        env->ThrowNew(ex,"");
     }
-    Mat srcGray = cvtColor(srcImage, srcGray, CV_BGR2GRAY);
-
+    Mat srcGray = srcImage.clone();
+    cvtColor(srcImage, srcGray, CV_BGR2GRAY);
     //高斯滤波
     GaussianBlur(srcGray, srcGray, Size(3, 3),
                  0, 0);

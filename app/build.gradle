@@ -12,15 +12,15 @@ android {
 //        flavorDimensions "2"
         externalNativeBuild {
             cmake {
-//                arguments "-DANDROID_STL=c++_static "
-                cppFlags "-std=c++11", "-frtti", "-fexceptions"
-                abiFilters "armeabi-v7a", "x86", "arm64-v8a"
-
+               /* arguments "-DANDROID_STL=c++_static"*/
+                cppFlags "-std=c++11", "-frtti", "-fexceptions","-Wno-format-security"
             }
         }
         ndk {
+//            stl "c++_static"
+            stl "gnustl_static"
             ldLibs "log", "z", "m"
-            abiFilters "armeabi-v7a", "x86", "arm64-v8a"
+            abiFilters "armeabi", "armeabi-v7a", "x86", "arm64-v8a"
         }
     }
     buildTypes {
@@ -30,25 +30,24 @@ android {
         }
     }
     externalNativeBuild {
-        /*   cmake {
+           cmake {
             path 'CMakeLists.txt'
-        }*/
-        ndkBuild {
-            path file("src/main/cpp/Android.mk")
-//            path "src/main/cpp/Application.mk"
         }
+     /*   ndkBuild {
+            path file("src/main/cpp/Android.mk")
+        }*/
     }
     sourceSets {
         main {
             jni.srcDirs = []
-            jniLibs.srcDirs = ['libs']
+            jniLibs.srcDirs = ['libs', 'src/main/jniLibs']
 //            jniLibs.srcDirs = ['']
 //        jniLibs.srcDirs = ['src/main/jniLibs']
         }
     }
 //    productFlavors {
 //        ndkflavor {
-//            applicationId "com.zjy.js.customdialog_id"
+//            applicationId "com.zjy.js.customdialog_id_ndk_mk"
 //            minSdkVersion 18
 //            targetSdkVersion 26
 //            versionCode 2
@@ -56,12 +55,10 @@ android {
 //            flavorDimensions "2"
 //            externalNativeBuild {
 //                ndk {
-//                    moduleName "ndkJniTest"
 //                    ldLibs "log", "z", "m"
 //                    abiFilters "armeabi", "armeabi-v7a", "x86"
 //                }
 //                cmake {
-//                    abiFilters "armeabi", "armeabi-v7a", "x86"
 //                    cppFlags "-std=c++11 -frtti -fexceptions"
 //                }
 //            }

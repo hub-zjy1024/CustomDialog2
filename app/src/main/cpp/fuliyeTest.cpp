@@ -4,7 +4,24 @@
 
 
 #include "fuliyeTest.h"
+#include <opencv2/core/core.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <iostream>
+#include "opencv2/core/cvstd.hpp"
+#include "opencv2/core/types.hpp"
+#include "opencv2/opencv.hpp"
+#include "opencv2/imgcodecs/imgcodecs_c.h"
+#include "opencv2/core/mat.hpp"
+#include "opencv2/imgproc.hpp"
+#include "opencv2/core/fast_math.hpp"
+#include "opencv2/core/base.hpp"
+#include "opencv2/core/hal/interface.h"
+#include "opencv2/core.hpp"
+#include "AndroidLog.h"
+#include "com_zjy_js_customdialog_JniTest.h"
 
+#include <opencv2/core/ocl.hpp>
 using namespace cv;
 using namespace std;
 
@@ -13,7 +30,283 @@ using namespace std;
 #define IMAGE_PATH "/sdcard/opencv"
 #define COLSLIMIT 1080
 
+
+class testCla{
+protected:
+    const void a();
+    void a(uint b);
+};
+
+const void testCla::a() {
+
+}
+void testCla::a(uint b){
+
+}
+class cla2:testCla{
+    void a() {
+
+    }
+};
 //#define DEGREE 27
+extern "C"{
+
+
+class Sample{
+public:
+    const char *filepath = "/sdcard/";
+
+    void createAlphaMat(Mat &mat)
+    {
+
+        size_t ia[3][4];
+        size_t cnt = 0;
+        for (auto &row:ia) {
+            for (auto &col:row) {
+                col = cnt;
+                ++cnt;
+            }
+        }
+        CV_Assert(mat.channels() == 4);
+        for (int i = 0; i < mat.rows; ++i) {
+            for (int j = 0; j < mat.cols; ++j) {
+                Vec4b& bgra = mat.at<Vec4b>(i, j);
+                bgra[0] = UCHAR_MAX; // Blue
+                bgra[1] = saturate_cast<uchar>((float (mat.cols - j)) / ((float)mat.cols) * UCHAR_MAX); // Green
+                bgra[2] = saturate_cast<uchar>((float (mat.rows - i)) / ((float)mat.rows) * UCHAR_MAX); // Red
+                bgra[3] = saturate_cast<uchar>(0.5 * (bgra[1] + bgra[2])); // Alpha
+            }
+        }
+    }
+
+   int main(int argv, char **argc)
+    {
+        // Create mat with alpha channel
+        Mat mat(480, 640, CV_8UC4);
+        createAlphaMat(mat);
+        vector<int> compression_params;
+        compression_params.push_back(IMWRITE_PNG_COMPRESSION);
+        compression_params.push_back(9);
+        try {
+            string str = filepath ;
+            str = str + "alpha.png";
+            imwrite(str, mat, compression_params);
+        } catch (cv::Exception ex) {
+            fprintf(stderr, "Exception converting image to PNG format: %s\n", ex.what());
+            return 1;
+        }
+        fprintf(stdout, "Saved PNG file with alpha data.\n");
+        return 0;
+    }
+};
+}
+
+#define MVersion JNI_VERSION_1_4
+
+JavaVM *g_jvm;
+using namespace cv::ocl;
+JNIEXPORT jstring JNICALL getString()
+{
+    JNIEnv *env = NULL;
+    g_jvm->AttachCurrentThread(&env, NULL); //g_jvm为JavaVM指针
+    return env->NewStringUTF("This is Natvie String!");
+}
+JNIEXPORT jstring JNICALL getString2()
+{
+    JNIEnv *env = NULL;
+    g_jvm->AttachCurrentThread(&env, NULL); //g_jvm为JavaVM指针
+    return env->NewStringUTF("This is Natvie String2!");
+}
+JNIEXPORT void JNICALL testVoid() {
+    JNIEnv *env = NULL;
+    g_jvm->AttachCurrentThread(&env, NULL); //g_jvm为JavaVM指针
+    jclass exCla = env->FindClass("com/zjy/js/customdialog/opencvutils/ExTest");
+    env->ThrowNew(exCla, "errror void");
+}
+jintArray newArray1(JNIEnv *env, jint size){
+    jintArray mArr = env->NewIntArray(size);
+    jint *arr = env->GetIntArrayElements(mArr, JNI_FALSE);
+    arr[0]=1;
+    arr[1]=2;
+    arr[3]=3;
+    return mArr;
+}
+jintArray newArray(JNIEnv *env, jint size){
+    jintArray mArr = env->NewIntArray(size);
+    jint arr[size];
+    for(int i=0;i<size;i++){
+        arr[i] = i;
+    }
+    env->SetIntArrayRegion(mArr, 0, size, arr);
+    return mArr;
+}
+JNIEXPORT jintArray JNICALL getModify(jintArray buf, jint w,
+                                   jint h) {
+    LOGE("use getModify ");
+    jint ret = 15;
+    JNIEnv *env = NULL;
+    g_jvm->AttachCurrentThread(&env, NULL); //g_jvm为JavaVM指针
+//    return mArr;
+//    return newArray1(env, 15);
+    return newArray(env, 12);
+}
+
+JNIEXPORT jintArray JNICALL getModify2(jintArray buf, jint w,
+                                      jint h) {
+    LOGE("use getModify2 ");
+    jint ret = 15;
+//    jintArray *mArr =new jintArray[3] {
+//            [0]=1, [1]=2, [2]=3
+//    };
+    JNIEnv *env = NULL;
+    g_jvm->AttachCurrentThread(&env, NULL); //g_jvm为JavaVM指针
+    jsize size=8;
+//    return newArray1(env,size);
+    return newArray(env, size);
+}
+
+struct JavaClassAndMethods {
+    const char *claName;
+//    JNINativeMethod methods[];
+    JNINativeMethod *methods;
+    int mLen;
+};
+
+void testPointer() {
+    string a = "123123";
+    size_t msize;
+    char *p = const_cast<char*>(a.c_str());
+    int *tp;
+    int  b=100;
+    tp = &b;
+    LOGE("*p=%d,p=%p",*tp,tp);
+}
+
+void testArrIterate() {
+    int var[3] = {1, 2, 3};
+    int *ptr = var;  //指针中的数组地址
+    for (int i = 0; i < 3; i++) {
+        cout << *ptr << ',';
+        ptr++;
+    }
+}
+void testArrIterate2() {
+    int var[3] = {1, 2, 3};
+    int *ptr = var;  //指针中的数组地址
+    for (int i = 0; i < 3; i++) {
+        cout << *ptr << ',';
+        ptr++;
+    }
+}
+
+void testMalloc() {
+    int *p = static_cast<int *>(malloc(sizeof(int)));
+    *p=123;
+    *p=421;
+    int var[3] = {1, 2, 3};
+    int *ptr = var;  //指针中的数组地址
+    int size=sizeof(var)/ sizeof(var[0]);
+    LOGE("var p=%d",(int)p);
+
+    LOGE("var size=%d",size);
+    for (int i = 0; i < 3; i++) {
+        cout << *ptr << ',';
+        LOGE("ptr=%d",*ptr);
+        ptr++;
+    }
+    free(p);
+}
+template<typename T, typename T2>
+void make2dArray(/*output para*/T** &arr, const uint16_t x, T2& volatileY_array)
+{
+    /*你要的长度。用模版的形式，就能够把数组以指针的形式传进来。*/
+    int len = sizeof(volatileY_array)/sizeof(volatileY_array[0]);
+    try
+    {
+        if (x != len)
+        {
+            throw std::bad_alloc();
+        }
+        arr = new T*[x];
+        for (int i = 0; i < x; i++)
+        {
+            arr[i] = new T[volatileY_array[i]];
+        }
+    }
+    catch (std::bad_alloc)
+    {
+        std::cout << "Error." << std::endl;
+    }
+}
+JNIEXPORT jint JNICALL  JNI_OnLoad(JavaVM *vm, void *t) {
+    LOGE("JNI_OnLoad invoked");
+    JNIEnv* env;
+    jint status =vm->GetEnv(reinterpret_cast<void**> (&env),MVersion);
+    if (JNI_OK != status) {
+        LOGW("JNI_OnLoad could not get JNI env");
+        return JNI_ERR;
+    }
+    LOGE("JNI_OnLoad GetEnv OK ");
+    g_jvm = vm;
+    JNIEnv *envnow;
+    const char *cla1 = "com/zjy/js/customdialog/opencvutils/ImageUtils";
+    JNINativeMethod methods1[] = {
+            [0]= {"getNativeString", "()Ljava/lang/String;", reinterpret_cast<void *>(getString)},
+            [1]={"getNativeString2", "()Ljava/lang/String;", reinterpret_cast<void *>(getString2)}
+            ,[2]={"getModifyOrientation2", "([III)[I",
+                  reinterpret_cast<void *>(getModify2)}
+            ,[3]={"testVoid", "()V",
+                  reinterpret_cast<void *>(testVoid)}
+       /*     ,[3]={"getModifyOrientation", "([III)[I",
+                  reinterpret_cast<void *>(getModify)}*/
+    };
+
+    JavaClassAndMethods methodsAll[] = {
+            [0].claName=cla1,
+            [0].methods=methods1,
+            [0].mLen=sizeof(methods1) / sizeof(JNINativeMethod)
+//                [1].claName=cla2,
+//                [1].methods=methods2
+    };
+    status = vm->AttachCurrentThread(&envnow, NULL);
+    LOGE("AttachCurrentThread status=%d",status);
+//    if(status < 0)
+//    {
+//        return status;
+//    }
+    int len1=sizeof(methodsAll);
+    int len2=sizeof(JavaClassAndMethods);
+    int len =len1/len2;
+    LOGE("methods len1=%d,len2=%d,len=%d",len1,len2,len);
+    for (int i = 0; i < len; i++)
+    {
+        JavaClassAndMethods temp = methodsAll[i];
+        JNINativeMethod *tempMethods = temp.methods;
+        const char* claName=temp.claName;
+        string data=claName;
+        const char *finalMSG = (data + " loaded").c_str();
+        LOGE("%s loaded",claName);
+        jclass mclas = envnow->FindClass(claName);
+        int tL1 = sizeof(tempMethods);
+        int tL2 = sizeof(tempMethods[0]);
+//        int len3 = tL1 / tL2;
+        int len3 = temp.mLen;
+        LOGE(" register methods tL1=%d,tL2=%d, len3=%d",tL1,tL2,len3);
+        envnow->RegisterNatives(mclas, tempMethods, len3);
+    }
+//    vm->DetachCurrentThread();
+    return MVersion;
+};
+
+int fun(int *s) {
+    int length = 0;
+    while (true) {
+        if (!s)
+            break;
+        s++;
+    }
+    return length;
+}
 
 
 TestHourf::TestHourf(int a, int b) {
@@ -103,15 +396,15 @@ void jiaozheng(){
 
 int main(int argc, char **argv)
 {
-    TestHourf ho=TestHourf(1,2);
-    TestHourf ho2(1,2);
-//    int b=ho->a;
-    ho.jiaozheng();
     //Read a single-channel image
     const char* filename = "imageText.jpg";
     Mat srcImg = imread(filename, CV_LOAD_IMAGE_GRAYSCALE);
     if(srcImg.empty())
         return -1;
+    string mdir=dir;
+    string imgPATH = mdir + "fuliye_read_gray.jpg";
+    setUseOpenCL(true);
+//    imwrite(imgPATH, srcImg);
     imshow("source", srcImg);
 
     Point center(srcImg.cols/2, srcImg.rows/2);
@@ -252,5 +545,3 @@ int main(int argc, char **argv)
 
     return 0;
 }
-
-

@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.zjy.js.customdialog.JniTest;
 import com.zjy.js.customdialog.R;
+import com.zjy.js.customdialog.opencvutils.ImageUtils;
 
 import org.opencv.samples.imagemanipulations.ImageManipulationsActivity;
 
@@ -42,6 +43,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,6 +77,35 @@ public class ToolbarTestActivity extends AppCompatActivity {
         JniTest test = new JniTest();
         String a = test.getString("北京", "我是傻子");
         Log.e("zjy", "MainActivity->onCreate(): jniTest==" + a);
+        String nativeString = ImageUtils.getNativeString();
+        Log.e("zjy", getClass() + "->onCreate(): nativeString==" +nativeString);
+        String nate = ImageUtils.getNativeString2();
+        Log.e("zjy", getClass() + "->onCreate(): nativeString2==" +nate);
+        try {
+            ImageUtils.testVoid();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+
+            int width=200;
+            int height = 200;
+            int size = width * height;
+            int pixs[] = new int[size];
+            for(int i=0;i<size;i++){
+                pixs[i] = (255 << 24) | (255 << 16) | (255 << 8) | (255 & 0xFF);
+            }
+            int[] modifyOrientation = ImageUtils.getModifyOrientation(pixs, width, height);
+            if (modifyOrientation != null) {
+                Log.e("zjy", getClass() + "->onCreate(): modifyOrientation==" + Arrays.toString(modifyOrientation));
+            }
+            int[] modifyOrientation2 = ImageUtils.getModifyOrientation2(pixs, 12, 12);
+            if (modifyOrientation2 != null) {
+                Log.e("zjy", getClass() + "->onCreate(): modifyOrientation2==" + Arrays.toString(modifyOrientation2));
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
         sp = getSharedPreferences("printerServer", Context.MODE_PRIVATE);
         String serverAddress = sp.getString("ip", "");
         edIP.setText(serverAddress);

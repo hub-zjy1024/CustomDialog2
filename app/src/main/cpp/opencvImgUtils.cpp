@@ -14,16 +14,22 @@
 #include <opencv2/core/types.hpp>
 #include <opencv2/core/types_c.h>
 #include <opencv2/core/core_c.h>
-
+#include "AndroidLog.h"
 using namespace std;
 using namespace cv;
 //IplImage* change4channelTo3InIplImage(IplImage*);
 //
 //void onMouse(int, int , int , int, void*);
 
+
 #ifndef _Included_com_zjy_js_customdialog_JniTest
 #define _Included_com_zjy_js_customdialog_JniTest
 
+int throwException(JNIEnv *env, const char *msg) {
+    jclass exCla = env->FindClass("com/zjy/js/customdialog/opencvutils/ExTest");
+    env->ThrowNew(exCla, msg);
+    return JNI_ERR;
+}
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -47,6 +53,37 @@ IplImage* change4channelTo3InIplImage(IplImage * src) {
 //    return destImg;
     return  src;
 }
+typedef int32_t BYTE;
+BYTE* dealWith(BYTE *pCur, int x, int y) {
+
+    return NULL;
+}
+
+jintArray newArray(JNIEnv *env, jint size){
+    jintArray mArr = env->NewIntArray(size);
+    jint arr[size];
+    for(int i=0;i<size;i++){
+        arr[i] = i;
+    }
+    env->SetIntArrayRegion(mArr, 0, size, arr);
+    return mArr;
+}
+void TransFormImg(int h, int w, int *cbuf, Mat myimg) {
+    Mat image3(h, w, CV_8UC3, cbuf);
+    int x, y;
+    int tempH = myimg.rows;
+    int tempW = myimg.cols;
+    int len = tempH * tempW;
+    BYTE *pCur = cbuf, *pRes = cbuf;
+    int n[20];
+    int d = n[0];
+    n[0] = 2;
+    for (y = 0; y < tempH; y++) {
+        for (x = 0; x < tempW; x++, pCur++, pRes++) {
+            pRes = dealWith(pCur, x, y); //f代表邻域运算的语句体(与位置x,y有关)
+        }
+    }
+}
 /*
  * Class:     com_zjy_js_customdialog_JniTest
  * Method:    getString
@@ -55,20 +92,28 @@ IplImage* change4channelTo3InIplImage(IplImage * src) {
 JNIEXPORT jintArray JNICALL
 Java_com_zjy_js_customdialog_opencvutils_ImageUtils_getModifyOrientation(JNIEnv *env, jclass type, jintArray buf, jint w,
                                                                          jint h) {
-    jint *cbuf;
+    jint *cbuf = NULL;
+    if (buf == NULL) {
+        LOGE( "input Array is null");
+        jclass exCla = env->FindClass("com/zjy/js/customdialog/opencvutils/ExTest");
+        env->ThrowNew(exCla, "errror,null data");
+    }
     cbuf = env->GetIntArrayElements(buf, 0);
     if (cbuf == NULL) {
-        return 0;
+        LOGE("cbuf  ==null");
+        return reinterpret_cast<jintArray>(JNI_ERR);
     }
+    Mat myimg(h, w, CV_8UC4, cbuf);
+    Mat target = myimg.clone();
+    Mat cannyImg = myimg.clone();
+    cvtColor(myimg, target, COLOR_BGRA2GRAY);
+    Canny(target, cannyImg, 50, 150, 3);
+//    IplImage *image = new IplImage(myimg);
+//    IplImage* image3channel = change4channelTo3InIplImage(image);
+//
+//    IplImage* pCannyImage=cvCreateImage(cvGetSize(image3channel),IPL_DEPTH_8U,1);
 
-    Mat myimg(h, w, CV_8UC4, (unsigned char*) cbuf);
-    IplImage image=IplImage(myimg);
-    IplImage image2(myimg);
-    IplImage* image3channel = change4channelTo3InIplImage(&image);
-
-    IplImage* pCannyImage=cvCreateImage(cvGetSize(image3channel),IPL_DEPTH_8U,1);
-
-    cvCanny(image3channel,pCannyImage,50,150,3);
+//    cvCanny(image3channel,pCannyImage,50,150,3);
 
     int* outImage=new int[w*h];
     for(int i=0;i<w*h;i++)
@@ -80,8 +125,10 @@ Java_com_zjy_js_customdialog_opencvutils_ImageUtils_getModifyOrientation(JNIEnv 
     jintArray result = env->NewIntArray(size);
     env->SetIntArrayRegion(result, 0, size, outImage);
     env->ReleaseIntArrayElements(buf, cbuf, 0);
+    delete outImage;
     return result;
 };
+
  Mat imgDataToMat(JNIEnv *env,jintArray buf, jint w,jint h){
     jint *cbuf;
     cbuf = env->GetIntArrayElements(buf, 0);
