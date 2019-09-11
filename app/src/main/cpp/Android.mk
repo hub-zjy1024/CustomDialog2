@@ -4,7 +4,6 @@ include $(CLEAR_VARS)
 NDK_PROJECT_PATH=$(APP_PROJECT_PATH)
 $(warning NDK_PROJECT_PATH=$(NDK_PROJECT_PATH))
 $(warning LOCAL_PATH=$(LOCAL_PATH))
-opencv_home:=D:/downloads/CustomDialog/sdk
 ifeq ("$(wildcard $(OPENCV_MK_PATH))","")
 # include指向自己OpenCV-android-sdk/sdk/native/jni/OpenCV.mk对应位置
 else
@@ -25,12 +24,10 @@ include $(PREBUILT_SHARED_LIBRARY)
 
 include $(CLEAR_VARS)
 OPENCV_INSTALL_MODULES:=on
-#include $(opencv_home)/native/jni/OpenCV.mk
-#LOCAL_C_INCLUDES +=opencv opencv2
-$(warning home=$(opencv_home))
 LOCAL_MODULE := opencv_zjy
-LOCAL_SRC_FILES := opencvImgUtils.cpp
+#LOCAL_C_INCLUDES +=$(LOCAL_PATH)
+LOCAL_SRC_FILES := opencvImgUtils.cpp fuliyeTest.cpp changeImg.cpp androidUtil.cpp
 LOCAL_SHARED_LIBRARIES :=opencv_3_4_2
-LOCAL_LDLIBS += -lm -llog
+LOCAL_LDLIBS += -lm -llog -ljnigraphics
 
 include $(BUILD_SHARED_LIBRARY)

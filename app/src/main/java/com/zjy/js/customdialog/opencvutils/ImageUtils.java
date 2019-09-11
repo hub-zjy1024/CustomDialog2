@@ -18,4 +18,11 @@ public class ImageUtils {
 
     public static native int[] getModifyOrientation(int[] pixs, int width, int height);
 
+    public static native String getNativeString();
+
+    public static native String getNativeString2();
+
+    public static native void testVoid();
+    public static native int[] getModifyOrientation2(int[] pixs, int width, int height);
+
 }

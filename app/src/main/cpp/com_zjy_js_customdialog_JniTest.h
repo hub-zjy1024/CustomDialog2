@@ -15,17 +15,10 @@ extern "C" {
 JNIEXPORT jstring JNICALL Java_com_zjy_js_customdialog_JniTest_getString
   (JNIEnv *, jobject, jstring, jstring);
 
+JNIEXPORT jintArray JNICALL
+Java_com_zjy_js_customdialog_opencvutils_ImageUtils_getModifyOrientation(JNIEnv *env, jclass type, jintArray pixs_, jint width,
+ jint height);
 #ifdef __cplusplus
 }
 #endif
 #endif
-extern "C"
-JNIEXPORT jintArray JNICALL
-Java_com_zjy_js_customdialog_opencvutils_ImageUtils_getModifyOrientation(JNIEnv *env, jclass type, jintArray pixs_, jint width,
-                                                                         jint height) {
-    jint *pixs = env->GetIntArrayElements(pixs_, NULL);
-
-    // TODO
-
-    env->ReleaseIntArrayElements(pixs_, pixs, 0);
-}

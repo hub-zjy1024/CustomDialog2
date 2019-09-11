@@ -34,6 +34,7 @@
             android:name=".ServiceMQTT"
             android:enabled="true">
         </service>
+        <service android:name=".MyPrintService" />
 
         <activity android:name=".activity.FontSizeTestActivity">
         </activity>
